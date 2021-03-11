@@ -244,14 +244,22 @@ export class InstaTouch {
                 }
             } catch (error) {
                 if (error.name === 'StatusCodeError') {
-                    reject(`Can't find requested data`);
-                } else if (error.name === 'RequestError') {
+                    if (error?.statusCode != 404) {
+                        console.log('untracked error: ', error.statusCode)
+                        reject(`Request error`);
+                    } else {
+                        //console.log('DEBUG: instatouch', error)
+                        reject(`Can't find requested data`);
+                    }
+                }
+                else if (error.name === 'RequestError') {
                     reject(`Request error`);
-                } else {
+                }
+                else {
                     reject(error);
                 }
             }
-        });
+        })
     }
 
     private returnInitError(error) {
